@@ -230,8 +230,9 @@ As a precaution for complicated and nested changes, my advice is to
   operations `[x] <---`.
 * Do the changes in multiple steps. You can clearly define the order and you
   can see the complete result of the former changes.
-* Write out all changes explicitly. For our icon example this would mean:
+* Write out all changes explicitly.
 
+For our icon example making all changes explicit would mean:
 
     # ViFi@/tmp/Build/Icons
     01      icons/actions
@@ -243,10 +244,10 @@ As a precaution for complicated and nested changes, my advice is to
     04      icons
     06      icons/warning.svg
 
-Making all changes explicit tells ViFi to completely decompose the directory
-structure, and puzzle it back together in the desired way. Apart from using
-more filesystem operations (and more explicit writing), there are no
-detrimental effects.
+The explicit changes tell ViFi to completely decompose the directory structure,
+and puzzle it back together in the desired way. Apart from using more
+filesystem operations (and more explicit writing), there are no detrimental
+effects.
 
 
 # Background Theory
