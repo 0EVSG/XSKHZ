@@ -1,0 +1,4 @@
+constexpr const char *copyright =
+R"(
+@COPYRIGHT_TEXT@
+)";

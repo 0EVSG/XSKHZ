@@ -1,0 +1,10 @@
+/*!
+\mainpage ViFi file management tool
+
+\li [Readme](md_README.html) - Basic information and a quick start with an example.
+\li [Manual](md_MANUAL.html) - Complete manual with syntax definitions and semantic rules.
+\li [Installation](md_INSTALL.html) - Build instructions and platform compatibility.
+\li [Tasks](md_TASKS.html) - Open tasks and improvements.
+\li [Copyright](md_COPYRIGHT.html) - Copyright notice (ISC license)
+
+*/

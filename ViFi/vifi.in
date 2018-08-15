@@ -1,0 +1,81 @@
+#!/bin/sh
+
+# Check base directory argument.
+if [ "$#" -ne "1" ]; then
+  echo "Usage: vifi path/to/directory"
+  exit 1
+fi
+VIFI_BASE_DIR="$1"
+if [ ! -d "$VIFI_BASE_DIR" ]; then
+  echo "Path $VIFI_BASE_DIR does not exist or is not a directory."
+  exit 1
+fi
+
+# Create temporary directory.
+VIFI_TEMP_DIR="$VIFI_BASE_DIR/.ViFi"
+if [ ! -d "$VIFI_TEMP_DIR" ]; then
+  mkdir "$VIFI_TEMP_DIR"
+else
+  echo "Temporary $VIFI_TEMP_DIR exists from previous run, cleanup manually."
+  exit 1
+fi
+
+# Set paths for temporary ViFi files.
+VIFI_CURRENT_FILE="$VIFI_TEMP_DIR/current"
+VIFI_CHANGED_FILE="$VIFI_TEMP_DIR/changed"
+
+# Scan base directory to FVM file.
+ViFi scan "$VIFI_BASE_DIR" "$VIFI_CURRENT_FILE"
+if [ "$?" -eq "0" ]; then
+  cp "$VIFI_CURRENT_FILE" "$VIFI_CHANGED_FILE"
+else
+  echo "Failed to scan directory $VIFI_BASE_DIR"
+  exit 1
+fi
+
+# Edit text file and process changes, repeat on request.
+while :
+do
+  # Edit text file.
+  $EDITOR "$VIFI_CHANGED_FILE"
+  if [ "$?" -ne "0" ]; then
+    echo "Failed to edit $VIFI_CHANGED_FILE"
+    exit 1
+  fi
+
+  # Process changes and execute file operations.
+  ViFi move "$VIFI_CURRENT_FILE" "$VIFI_CHANGED_FILE"
+  VIFI_STATUS="$?"
+
+  # Examine ViFi status.
+  if [ "$VIFI_STATUS" -eq "0" ]; then
+    # ViFi finished successfully.
+    break
+  elif [ "$VIFI_STATUS" -eq "1" ]; then
+    # Invalid text file or cancelled by user, ask how to proceed.
+    echo "Revise the text file or discard it? [r|d]"
+    while read VIFI_REVISE
+    do
+      case $VIFI_REVISE in
+        [rR]* )
+          continue 2 ;;
+        [dD]* )
+          echo "Discarded."
+          break 2 ;;
+        * )
+          echo "Type 'r' to revise the text file, 'd' to discard it."
+      esac
+    done
+  else
+    # Unknown failure, no cleanup of temporary directory.
+    echo "Failed to process changes."
+    exit "$VIFI_STATUS"
+  fi
+done
+
+# Cleanup text files and temporary directory.
+if rm "$VIFI_CURRENT_FILE" && rm "$VIFI_CHANGED_FILE" && rmdir "$VIFI_TEMP_DIR"; then
+  exit 0
+else
+  echo "Unable to cleanup temporary $VIFI_TEMP_DIR"
+fi

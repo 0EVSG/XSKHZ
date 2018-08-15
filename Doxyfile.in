@@ -1,0 +1,12 @@
+PROJECT_NAME           = "@CMAKE_PROJECT_NAME@"
+PROJECT_NUMBER         = @PROJECT_VERSION@
+STRIP_FROM_PATH        = @PROJECT_SOURCE_DIR@
+INPUT                  = @PROJECT_SOURCE_DIR@
+FILE_PATTERNS          = *.hpp \
+                         *.cpp \
+                         *.md \
+                         *.txt \
+                         *.dox
+OUTPUT_DIRECTORY       = @DOXYGEN_OUTPUT_DIR@
+RECURSIVE              = YES
+GENERATE_LATEX         = NO
