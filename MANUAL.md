@@ -359,6 +359,7 @@ This choice has a number of advantages - we avoid ambiguities and problems with
 recursion, changes are composable, and simple cases like renaming a directory
 with internal changes can be done with very little effort. But it also imposes
 some limitations on what changes can be expressed by altering the text file.
+In particular the following changes are impossible to express:
 
 * Make a backup copy of a directory and change the original.
 * Leave a file or directory in place but move away its parent directory.
