@@ -115,8 +115,8 @@ These are some quick guidelines to get you started. Some remarks first:
   You can always abort instead if in doubt.
   * `<---` is moving entries out to a temporary location, `--->` in again.
   * `<===` is copying entries out to temporary location, `===>` in again.
-  * [x] means deleting an entry.
-  * [\*] means creating a new directory.
+  * `[x]` means deleting an entry.
+  * `[*]` means creating a new directory.
 * Experiment with files that you can recover from repos, snapshots or backups.
 
 When editing the text file, in most cases it is best to treat entries as
