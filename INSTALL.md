@@ -47,7 +47,41 @@ the `vifi` shell script that is invoked by the user. These are placed in a
     <joe@work~/Build> ninja install
 
 in the build directory. Don't forget to include the installation directory in
-the `PATH` variable of your shell if necessary. Also make sure that the `EDITOR`
-variable is exported when using ViFi.
+the `$PATH` variable of your shell if necessary. Also make sure that the
+`$EDITOR` variable is exported when using ViFi. These variables are typically
+set in the `.*shrc` file of the shell.
 
 Enjoy!
+
+
+# Platform Notes
+
+## FreeBSD
+
+Prerequisites:
+
+    root@work:~ # pkg install ninja cmake boost-libs
+
+FreeBSD promotes the `$HOME/bin` directory for user installed software, and
+includes it in `$PATH` by default. That would thus be
+`CMAKE_INSTALL_PREFIX:PATH=/home/joe` as CMake argument in the example above.
+
+If left unchanged, `$EDITOR` points to one of the basic editors found in
+FreeBSD base.
+
+## Ubuntu
+
+Prerequisites:
+
+    <joe@work~> sudo apt-get install ninja-build cmake libboost-all-dev
+
+Ubuntu seems to use either `$HOME/bin` or `$HOME/.local/bin` by default for
+software in the home directory, and will set `$PATH` accordingly on login.
+That would suggest to use `CMAKE_INSTALL_PREFIX:PATH=/home/joe` or
+`CMAKE_INSTALL_PREFIX:PATH=/home/joe/.local` for CMake.
+
+Ubuntu does not set `$EDITOR` by itself, so you have to add something like
+
+    export EDITOR='vim'
+
+to `.bashrc` for the default bash shell.
