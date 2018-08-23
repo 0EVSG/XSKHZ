@@ -17,4 +17,6 @@ _ViFi file management tool_
 
 ## Version 0.1.0
 
-- [ ] Initial dump to github repository.
+- [x] Initial dump to github repository.
+- [x] Build and basic tests on Ubuntu.
+- [ ] Check for empty `$EDITOR` variable.
