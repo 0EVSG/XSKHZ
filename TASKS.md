@@ -19,4 +19,4 @@ _ViFi file management tool_
 
 - [x] Initial dump to github repository.
 - [x] Build and basic tests on Ubuntu.
-- [ ] Check for empty `$EDITOR` variable.
+- [x] Check for empty `$EDITOR` variable in vifi script.

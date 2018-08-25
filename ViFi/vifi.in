@@ -1,5 +1,11 @@
 #!/bin/sh
 
+# Check for an empty EDITOR variable.
+if [ -z "$EDITOR" ]; then
+  echo "Undefined EDITOR variable - please set your favorite text editor."
+  exit 1
+fi
+
 # Check base directory argument.
 if [ "$#" -ne "1" ]; then
   echo "Usage: vifi path/to/directory"
@@ -37,7 +43,7 @@ fi
 while :
 do
   # Edit text file.
-  $EDITOR "$VIFI_CHANGED_FILE"
+  "$EDITOR" "$VIFI_CHANGED_FILE"
   if [ "$?" -ne "0" ]; then
     echo "Failed to edit $VIFI_CHANGED_FILE"
     exit 1
