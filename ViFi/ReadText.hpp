@@ -1,12 +1,12 @@
 #ifndef READTEXT_HPP
 #define READTEXT_HPP
 
-#include <boost/filesystem.hpp>
+#include <experimental/filesystem>
 #include <iosfwd>
 
 class FileTree;
 
-namespace fs = boost::filesystem;
+namespace fs = std::experimental::filesystem;
 
 /*!
  * \class ReadText ReadText.hpp "ViFi/ReadText.hpp"

@@ -1,10 +1,10 @@
 #ifndef FILEOPSEQUENCE_HPP
 #define FILEOPSEQUENCE_HPP
 
-#include <boost/filesystem.hpp>
+#include <experimental/filesystem>
 #include <vector>
 
-namespace fs = boost::filesystem;
+namespace fs = std::experimental::filesystem;
 
 /*!
  * \class FileOpSequence FileOpSequence.hpp "ViFi/FileOpSequence.hpp"

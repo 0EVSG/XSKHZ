@@ -9,13 +9,10 @@ include(Documentation.cmake)
 # Build settings.
 include(Build.cmake)
 set(CMAKE_BUILD_TYPE Debug)
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED 14)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED 17)
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${BUILD_COMPILER_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${BUILD_COMPILER_FLAGS}")
-
-# Find external libraries.
-find_package(Boost REQUIRED COMPONENTS filesystem)
 
 
 ## ViFi Executable ##
@@ -40,10 +37,10 @@ set(VIFI_HDR
 
 add_library(ViFiLib ${VIFI_SRC} ${VIFI_HDR})
 target_link_libraries(ViFiLib
-  PUBLIC ${Boost_LIBRARIES}
+  PUBLIC c++experimental
 )
 target_include_directories(ViFiLib
-  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${Boost_INCLUDE_DIRS}
+  PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 # ViFi executable target.

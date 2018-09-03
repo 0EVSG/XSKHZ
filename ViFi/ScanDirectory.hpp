@@ -1,11 +1,11 @@
 #ifndef SCANDIRECTORY_HPP
 #define SCANDIRECTORY_HPP
 
-#include <boost/filesystem.hpp>
+#include <experimental/filesystem>
 
 class FileTree;
 
-namespace fs = boost::filesystem;
+namespace fs = std::experimental::filesystem;
 
 /*!
  * \class ScanDirectory ScanDirectory.hpp "ViFi/ScanDirectory.hpp"

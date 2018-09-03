@@ -4,7 +4,6 @@ _ViFi file management tool_
 
 ## Planned
 
-- [ ] Replace Boost library with C++17 std::filesystem library.
 - [ ] Plausibility check before processing filesystem operations.
 
 ## On Request
@@ -17,6 +16,7 @@ _ViFi file management tool_
 
 ## Upcoming
 
+- [x] Replace Boost library with C++17 std::filesystem library.
 - [x] Enable more compiler warnings and fix them.
 - [x] Build options for static code analysis.
 

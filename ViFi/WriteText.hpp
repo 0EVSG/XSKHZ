@@ -1,12 +1,12 @@
 #ifndef WRITETEXT_HPP
 #define WRITETEXT_HPP
 
-#include <boost/filesystem.hpp>
+#include <experimental/filesystem>
 #include <ostream>
 
 class FileTree;
 
-namespace fs = boost::filesystem;
+namespace fs = std::experimental::filesystem;
 
 /*!
  * \class WriteText WriteText.hpp "ViFi/WriteText.hpp"

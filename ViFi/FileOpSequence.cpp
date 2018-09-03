@@ -102,34 +102,33 @@ void FileOpSequence::prepare() {
   }
 }
 
-void FileOpSequence::print(const fs::path &base) {
+void FileOpSequence::print(const fs::path & /*unused*/) {
   std::vector<int> copies(_maxEntry + 1, 0);
   for (const Operation *op : _operations) {
     switch (op->type) {
     case CopyOut:
       copies[op->entryId] += op->copies;
-      std::cout << fs::relative(temporary(op->entryId), base)
-                << " <=== " << fs::relative(op->path, base) << std::endl;
+      std::cout << temporary(op->entryId) << " <=== " << op->path << std::endl;
       break;
     case MoveOut:
       copies[op->entryId] += op->copies;
       if (op->copies > 0) {
-        std::cout << fs::relative(temporary(op->entryId), base) << " <--- "
-                  << fs::relative(op->path, base) << std::endl;
+        std::cout << temporary(op->entryId) << " <--- " << op->path
+                  << std::endl;
       } else {
-        std::cout << "[x] <--- " << fs::relative(op->path, base) << std::endl;
+        std::cout << "[x] <--- " << op->path << std::endl;
       }
       break;
     case CopyIn:
       copies[op->entryId] -= op->copies;
       if (op->copies == 0) {
-        std::cout << "[*] ---> " << fs::relative(op->path, base) << std::endl;
+        std::cout << "[*] ---> " << op->path << std::endl;
       } else if (copies[op->entryId] > 0) {
-        std::cout << fs::relative(temporary(op->entryId), base) << " ===> "
-                  << fs::relative(op->path, base) << std::endl;
+        std::cout << temporary(op->entryId) << " ===> " << op->path
+                  << std::endl;
       } else {
-        std::cout << fs::relative(temporary(op->entryId), base) << " ---> "
-                  << fs::relative(op->path, base) << std::endl;
+        std::cout << temporary(op->entryId) << " ---> " << op->path
+                  << std::endl;
       }
       break;
     default:

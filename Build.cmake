@@ -24,7 +24,7 @@ option(BUILD_CLANG_TIDY
 )
 
 if (BUILD_CLANG_TIDY)
-  find_program(BUILD_CLANG_TIDY_PROGRAM NAMES clang-tidy70 clang-tidy)
+  find_program(BUILD_CLANG_TIDY_PROGRAM NAMES clang-tidy80 clang-tidy)
   if (BUILD_CLANG_TIDY_PROGRAM)
     set(CMAKE_CXX_CLANG_TIDY ${BUILD_CLANG_TIDY_PROGRAM}
       "-checks=bugprone*,\

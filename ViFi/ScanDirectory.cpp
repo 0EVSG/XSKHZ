@@ -7,7 +7,7 @@
 namespace {
 
 void scanDir(const fs::path &path, const FileTree::Node *dir, FileTree &tree) {
-  for (fs::directory_entry &entry : fs::directory_iterator(path)) {
+  for (const fs::directory_entry &entry : fs::directory_iterator(path)) {
     // Only consider regular, non-hidden files and directories.
     if ((fs::is_regular_file(entry) || fs::is_directory(entry)) &&
         entry.path().filename().string().substr(0, 1) != ".") {

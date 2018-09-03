@@ -1,6 +1,7 @@
 #include "ViFi/ReadText.hpp"
 #include "ViFi/FileTree.hpp"
 #include <exception>
+#include <fstream>
 #include <istream>
 #include <map>
 #include <stdexcept>

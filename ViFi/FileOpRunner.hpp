@@ -2,9 +2,9 @@
 #define FILEOPRUNNER_HPP
 
 #include "ViFi/FileOpSequence.hpp"
-#include <boost/filesystem.hpp>
+#include <experimental/filesystem>
 
-namespace fs = boost::filesystem;
+namespace fs = std::experimental::filesystem;
 
 /*!
  * \class FileOpRunner FileOpRunner.hpp "ViFi/FileOpRunner.hpp"

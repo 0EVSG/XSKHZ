@@ -4,6 +4,7 @@
 #include <limits>
 #include <stdexcept>
 #include <string>
+#include <type_traits>
 #include <utility>
 
 namespace {
@@ -70,13 +71,15 @@ struct FileTree::Node {
    * \param pvt Pivot level, corresponding to execution level.
    * \return Constant move reference for given pivot.
    */
-  const Move &move(Level pvt) const { return moves.at(moves.size() - pvt); }
+  [[nodiscard]] const Move &move(Level pvt) const {
+    return moves.at(moves.size() - pvt);
+  }
 
   /*!
    * \brief Reassemble the filesystem path of the file tree node.
    * \return Filesystem path of this file tree node.
    */
-  fs::path path() const {
+  [[nodiscard]] fs::path path() const {
     if (dir && dir != this) {
       return dir->path() / name;
     } else {

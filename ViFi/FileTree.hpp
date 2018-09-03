@@ -1,10 +1,10 @@
 #ifndef FILETREE_HPP
 #define FILETREE_HPP
 
-#include <boost/filesystem.hpp>
+#include <experimental/filesystem>
 #include <vector>
 
-namespace fs = boost::filesystem;
+namespace fs = std::experimental::filesystem;
 
 class FileOpSequence;
 
