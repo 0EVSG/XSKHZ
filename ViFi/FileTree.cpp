@@ -152,7 +152,7 @@ const FileTree::Node *FileTree::setBasePath(fs::path path) {
 
 const FileTree::Node *FileTree::baseNode() const { return _root; }
 
-boost::filesystem::path FileTree::nodePath(const FileTree::Node *node) {
+fs::path FileTree::nodePath(const FileTree::Node *node) {
   if (node) {
     return node->path();
   }

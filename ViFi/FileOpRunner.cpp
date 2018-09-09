@@ -48,9 +48,7 @@ void FileOpRunner::moveOut(int entryId, fs::path source) {
   fs::rename(source, temporary(entryId));
 }
 
-void FileOpRunner::remove(boost::filesystem::path source) {
-  fs::remove_all(source);
-}
+void FileOpRunner::remove(fs::path source) { fs::remove_all(source); }
 
 void FileOpRunner::copyIn(int entryId, fs::path target) {
   copyRecursive(temporary(entryId), target);
@@ -60,6 +58,4 @@ void FileOpRunner::moveIn(int entryId, fs::path target) {
   fs::rename(temporary(entryId), target);
 }
 
-void FileOpRunner::createDir(boost::filesystem::path target) {
-  fs::create_directory(target);
-}
+void FileOpRunner::createDir(fs::path target) { fs::create_directory(target); }

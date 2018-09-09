@@ -108,8 +108,8 @@ void FileOpSequence::print(fs::path base) {
     switch (op->type) {
     case CopyOut:
       copies[op->entryId] += op->copies;
-      std::cout << fs::relative(temporary(op->entryId), base) << " <=== "
-                << fs::relative(op->path, base) << std::endl;
+      std::cout << fs::relative(temporary(op->entryId), base)
+                << " <=== " << fs::relative(op->path, base) << std::endl;
       break;
     case MoveOut:
       copies[op->entryId] += op->copies;
@@ -183,7 +183,7 @@ void FileOpSequence::copyOut(int entryId, fs::path source) {}
 
 void FileOpSequence::moveOut(int entryId, fs::path source) {}
 
-void FileOpSequence::remove(boost::filesystem::path source) {}
+void FileOpSequence::remove(fs::path source) {}
 
 void FileOpSequence::copyIn(int entryId, fs::path target) {}
 
