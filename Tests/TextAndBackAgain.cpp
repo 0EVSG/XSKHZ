@@ -1,6 +1,3 @@
-#ifndef TEXTANDBACKAGAIN_CPP
-#define TEXTANDBACKAGAIN_CPP
-
 #include "ViFi/FileTree.hpp"
 #include "ViFi/ReadText.hpp"
 #include "ViFi/WriteText.hpp"
@@ -70,8 +67,8 @@ TEST_F(TextAndBackAgain, PathConversion) {
   checkPathConversion(" ", " ");
   checkPathConversion(" a /path /with spaces ", " a /path /with spaces ");
   // Paths with slashes.
-  checkPathConversion("/\\x\\/\\y\\/\\z\\", "/\\x\\/\\y\\/\\z\\");
-  checkPathConversion("\\x\\/\\y\\/\\z\\", "\\x\\/\\y\\/\\z\\");
+  checkPathConversion(R"(/\x\/\y\/\z\)", R"(/\x\/\y\/\z\)");
+  checkPathConversion(R"(\x\/\y\/\z\)", R"(\x\/\y\/\z\)");
 }
 
 TEST_F(TextAndBackAgain, Empty) {
@@ -102,5 +99,3 @@ TEST_F(TextAndBackAgain, SimpleTree) {
   out << "01" << '\t' << "file1.txt" << std::endl;
   checkReadWrite(in.str(), out.str());
 }
-
-#endif // TEXTANDBACKAGAIN_CPP

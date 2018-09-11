@@ -112,7 +112,8 @@ fs::path FileTree::name(const FileTree::Node *entry) {
 }
 
 FileTree::FileTree()
-    : _root(new Node({nullptr, ROOT_ID, ROOT_ID, fs::path(), 0, MAX_PIVOT})),
+    : _root(
+          new Node({nullptr, ROOT_ID, ROOT_ID, fs::path(), 0, MAX_PIVOT, {}})),
       _original(true), _index(new std::vector<Node *>()) {
   _root->dir = _root;
   clear();
@@ -145,7 +146,7 @@ void FileTree::endTarget() {
 
 fs::path FileTree::basePath() const { return _root->name; }
 
-const FileTree::Node *FileTree::setBasePath(fs::path path) {
+const FileTree::Node *FileTree::setBasePath(const fs::path &path) {
   _root->name = path;
   return _root;
 }
@@ -216,7 +217,7 @@ void FileTree::generate(FileOpSequence &sequence) const {
 }
 
 void FileTree::clear() noexcept {
-  *_root = {_root, ROOT_ID, ROOT_ID, fs::path(), 0, MAX_PIVOT};
+  *_root = {_root, ROOT_ID, ROOT_ID, fs::path(), 0, MAX_PIVOT, {}};
 
   _byId.resize(1, _root);
   for (const Node *node : _nodes) {
@@ -235,11 +236,13 @@ bool FileTree::operator==(const FileTree &other) const {
                     });
 }
 
-const FileTree::Node *FileTree::addEntry(const Node *dir, fs::path name) {
+const FileTree::Node *FileTree::addEntry(const Node *dir,
+                                         const fs::path &name) {
   return addEntry(dir, _byId.size(), name);
 }
 
-FileTree::Node *FileTree::addEntry(const Node *dir, Id entryId, fs::path name) {
+FileTree::Node *FileTree::addEntry(const Node *dir, Id entryId,
+                                   const fs::path &name) {
   Node *node = nullptr;
   if (dir) {
     if (_original) {
@@ -250,8 +253,8 @@ FileTree::Node *FileTree::addEntry(const Node *dir, Id entryId, fs::path name) {
           throw std::runtime_error("Entry id of [" + name.string() +
                                    "] already in use.");
         }
-        node =
-            new Node({dir, entryId, NONE_ID, name, dir->level + 1, MAX_PIVOT});
+        node = new Node(
+            {dir, entryId, NONE_ID, name, dir->level + 1, MAX_PIVOT, {}});
         _byId[entryId] = node;
         _nodes.push_back(node);
       } else {
@@ -259,7 +262,7 @@ FileTree::Node *FileTree::addEntry(const Node *dir, Id entryId, fs::path name) {
       }
     } else {
       // Search for a directory entry of the same name.
-      const Node value = {dir, NONE_ID, NONE_ID, name, 0, 0};
+      const Node value = {dir, NONE_ID, NONE_ID, name, 0, 0, {}};
       auto range =
           std::equal_range(_index->begin(), _index->end(), &value, lessDirName);
       if (range.first != range.second) {
@@ -268,8 +271,8 @@ FileTree::Node *FileTree::addEntry(const Node *dir, Id entryId, fs::path name) {
         node->target = entryId;
       } else {
         // No existing entry, create a new entry node and append it.
-        node =
-            new Node({dir, NONE_ID, entryId, name, dir->level + 1, MAX_PIVOT});
+        node = new Node(
+            {dir, NONE_ID, entryId, name, dir->level + 1, MAX_PIVOT, {}});
         _nodes.push_back(node);
       }
     }
@@ -324,7 +327,8 @@ void FileTree::computeMoves() {
                               NONE_ID,
                               node->name,
                               0,
-                              0};
+                              0,
+                              {}};
           auto range = std::equal_range(index()->begin(), index()->end(),
                                         &value, lessDirName);
           if (range.first != range.second) {

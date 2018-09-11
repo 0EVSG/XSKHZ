@@ -15,7 +15,7 @@
  * \param exception Possibly nested exception to be printed.
  * \param level Exception nest level used for indentation.
  */
-void printException(const std::exception &exception, int level = 0) {
+void printException(const std::exception &exception, unsigned int level = 0) {
   std::cerr << std::string(level * 2, ' ') << exception.what() << std::endl;
   try {
     std::rethrow_if_nested(exception);
@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
           operations.print(tree.basePath());
           std::cout << "Do you want to execute operations? [y|n]";
           while (true) {
-            char c = std::getc(stdin);
+            int c = std::getc(stdin);
             if (c == 'y' || c == 'Y') {
               std::cout << "Executing operations..." << std::endl;
               operations.run();

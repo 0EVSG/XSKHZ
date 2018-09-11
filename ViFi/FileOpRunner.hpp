@@ -18,8 +18,8 @@ public:
    * \exception std::runtime_error On unusable temporary directory.
    * \exception fs::filesystem_error If creation of temporary directory fails.
    */
-  FileOpRunner(fs::path tempDir);
-  virtual ~FileOpRunner(); //!< Delete internal operations.
+  FileOpRunner(const fs::path &tempDir);
+  virtual ~FileOpRunner() override = default; //!< Delete internal operations.
 
   /*!
    * \brief Finish operation execution, clear temporary space.
@@ -41,7 +41,7 @@ protected:
    * \param source Path to copy the file or directory from.
    * \exception fs::filesystem_error On file operation failure.
    */
-  virtual void copyOut(int entryId, fs::path source) override;
+  virtual void copyOut(int entryId, const fs::path &source) override;
 
   /*!
    * \brief Called to move a file or directory out to temporary space.
@@ -49,14 +49,14 @@ protected:
    * \param source Path to move the file or directory from.
    * \exception fs::filesystem_error On file operation failure.
    */
-  virtual void moveOut(int entryId, fs::path source) override;
+  virtual void moveOut(int entryId, const fs::path &source) override;
 
   /*!
    * \brief Called to permanently remove a file or directory.
    * \param source Path of the file or directory to be removed.
    * \exception fs::filesystem_error On file operation failure.
    */
-  virtual void remove(fs::path source) override;
+  virtual void remove(const fs::path &source) override;
 
   /*!
    * \brief Called to copy a file or directory in from temporary space.
@@ -64,7 +64,7 @@ protected:
    * \param target Path to copy the file or directory to.
    * \exception fs::filesystem_error On file operation failure.
    */
-  virtual void copyIn(int entryId, fs::path target) override;
+  virtual void copyIn(int entryId, const fs::path &target) override;
 
   /*!
    * \brief Called to move a file or directory in from temporary space.
@@ -72,14 +72,14 @@ protected:
    * \param target Path to move the file or directory to.
    * \exception fs::filesystem_error On file operation failure.
    */
-  virtual void moveIn(int entryId, fs::path target) override;
+  virtual void moveIn(int entryId, const fs::path &target) override;
 
   /*!
    * \brief Called to create a new directory.
    * \param target Path of the directory to be created.
    * \exception fs::filesystem_error On file operation failure.
    */
-  virtual void createDir(fs::path target) override;
+  virtual void createDir(const fs::path &target) override;
 
 private:
   fs::path _tempDir; // Directory used as temporary space.

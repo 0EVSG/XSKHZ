@@ -51,16 +51,16 @@ void FileOpSequence::setMaxEntryId(int id) {
   _maxEntry = std::max(_maxEntry, id);
 }
 
-void FileOpSequence::addOutOp(int entryId, fs::path path, bool keep, int level,
-                              int pivot, int copies) {
+void FileOpSequence::addOutOp(int entryId, const fs::path &path, bool keep,
+                              int level, int pivot, int copies) {
   Type type = keep ? CopyOut : MoveOut;
   Operation *op = new Operation({type, entryId, path, level, pivot, copies});
   _operations.push_back(op);
   setMaxEntryId(entryId);
 }
 
-void FileOpSequence::addInOp(int entryId, fs::path path, bool create, int level,
-                             int pivot) {
+void FileOpSequence::addInOp(int entryId, const fs::path &path, bool create,
+                             int level, int pivot) {
   int copies = create ? 0 : 1;
   Operation *op = new Operation({CopyIn, entryId, path, level, pivot, copies});
   _operations.push_back(op);
@@ -92,7 +92,6 @@ void FileOpSequence::prepare() {
       break;
     default:
       throw std::runtime_error("FileOpSequence: Unknown operation type.");
-      break;
     }
     if (copies[op->entryId] < 0) {
       throw std::runtime_error(
@@ -102,7 +101,7 @@ void FileOpSequence::prepare() {
   }
 }
 
-void FileOpSequence::print(fs::path base) {
+void FileOpSequence::print(const fs::path &base) {
   std::vector<int> copies(_maxEntry + 1, 0);
   for (const Operation *op : _operations) {
     switch (op->type) {
@@ -134,7 +133,6 @@ void FileOpSequence::print(fs::path base) {
       break;
     default:
       throw std::runtime_error("FileOpSequence: Unknown operation type.");
-      break;
     }
   }
 }
@@ -167,7 +165,6 @@ void FileOpSequence::run() {
       break;
     default:
       throw std::runtime_error("FileOpSequence: Unknown operation type.");
-      break;
     }
   }
 }
@@ -179,21 +176,21 @@ fs::path FileOpSequence::temporary(int entryId) const {
   return hex.str();
 }
 
-void FileOpSequence::copyOut(int entryId, fs::path source) {}
+void FileOpSequence::copyOut(int /*unused*/, const fs::path & /*unused*/) {}
 
-void FileOpSequence::moveOut(int entryId, fs::path source) {}
+void FileOpSequence::moveOut(int /*unused*/, const fs::path & /*unused*/) {}
 
-void FileOpSequence::remove(fs::path source) {}
+void FileOpSequence::remove(const fs::path & /*unused*/) {}
 
-void FileOpSequence::copyIn(int entryId, fs::path target) {}
+void FileOpSequence::copyIn(int /*unused*/, const fs::path & /*unused*/) {}
 
-void FileOpSequence::moveIn(int entryId, fs::path target) {}
+void FileOpSequence::moveIn(int /*unused*/, const fs::path & /*unused*/) {}
 
-void FileOpSequence::createDir(fs::path target) {}
+void FileOpSequence::createDir(const fs::path & /*unused*/) {}
 
 bool FileOpSequence::operator==(const FileOpSequence &other) const {
   bool same = _operations.size() == other._operations.size();
-  for (int i = 0; i < _operations.size() && same; ++i) {
+  for (unsigned int i = 0; i < _operations.size() && same; ++i) {
     same = *(_operations.at(i)) == *(other._operations.at(i));
   }
   return same;

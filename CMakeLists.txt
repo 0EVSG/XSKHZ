@@ -6,13 +6,13 @@ project(XSKHZ VERSION 0.1.0)
 # Doxygen documentation.
 include(Documentation.cmake)
 
-# Compiler flags.
-set(SANITIZE_FLAGS "")
+# Build settings.
+include(Build.cmake)
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED 14)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall ${SANITIZE_FLAGS}")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall ${SANITIZE_FLAGS}")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${BUILD_COMPILER_FLAGS}")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${BUILD_COMPILER_FLAGS}")
 
 # Find external libraries.
 find_package(Boost REQUIRED COMPONENTS filesystem)
@@ -86,7 +86,7 @@ if (BUILD_TESTS)
     message(FATAL_ERROR "Google C++ Testing Framework is required for tests.")
   endif (NOT GTEST_FOUND)
 
-  set (TEST_SRC
+  set(TEST_SRC
     Tests/FileTreeMatch.cpp
     Tests/TextAndBackAgain.cpp
   )

@@ -1,5 +1,3 @@
-#ifndef FILETREEMATCH_CPP
-#define FILETREEMATCH_CPP
 
 #include "ViFi/FileOpSequence.hpp"
 #include "ViFi/FileTree.hpp"
@@ -208,5 +206,3 @@ TEST_F(FileTreeMatch, IconsExample) {
   order.addInOp(5, "/Icons/icons/actions/send-mail.svg", false, 3, 1);
   checkOperations(current.str(), changed.str(), order);
 }
-
-#endif // FILETREEMATCH_CPP

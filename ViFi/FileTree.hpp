@@ -76,7 +76,7 @@ public:
    * \param path Path to the base directory.
    * \return Handler for the base directory.
    */
-  const Node *setBasePath(fs::path path);
+  const Node *setBasePath(const fs::path &path);
 
   /*!
    * \brief Get the entry node of the base directory.
@@ -142,7 +142,7 @@ public:
    * \param name Name of the entry in the parent directory.
    * \return Handler for the added entry, null on failure.
    */
-  const Node *addEntry(const Node *dir, fs::path name);
+  const Node *addEntry(const Node *dir, const fs::path &name);
 
   /*!
    * \brief Add an entry node to given directory.
@@ -151,7 +151,7 @@ public:
    * \param name Name of the entry in the parent directory.
    * \return Handler for the added entry, null on failure.
    */
-  Node *addEntry(const Node *dir, Id entryId, fs::path name);
+  Node *addEntry(const Node *dir, Id entryId, const fs::path &name);
 
 private:
   // Compute pivot levels.

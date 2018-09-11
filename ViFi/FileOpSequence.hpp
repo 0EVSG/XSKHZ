@@ -16,7 +16,7 @@ public:
   enum Type {
     CopyOut, //!< Copy file or directory out to temporary space.
     MoveOut, //!< Move file or directory out to temporary space.
-    CopyIn,  //!< Copy file or directory in from temporary space.
+    CopyIn   //!< Copy file or directory in from temporary space.
   };
 
   FileOpSequence();          //!< Empty constructor.
@@ -35,8 +35,8 @@ public:
    * \param pivot Pivot value for sorting, if different from level.
    * \param copies Total number of copies to be made.
    */
-  void addOutOp(int entryId, fs::path path, bool keep, int level, int pivot,
-                int copies);
+  void addOutOp(int entryId, const fs::path &path, bool keep, int level,
+                int pivot, int copies);
 
   /*!
    * \brief Add a file operation in from the temporary space.
@@ -46,7 +46,8 @@ public:
    * \param level Relative directory level of the target.
    * \param pivot Level of first path difference from original.
    */
-  void addInOp(int entryId, fs::path path, bool create, int level, int pivot);
+  void addInOp(int entryId, const fs::path &path, bool create, int level,
+               int pivot);
 
   /*!
    * \brief Check and sort operations into a feasible order.
@@ -64,7 +65,7 @@ public:
    * \brief Print file operations to stdout for user inspection.
    * \param base Print operation paths relative to this path.
    */
-  void print(fs::path base);
+  void print(const fs::path &base);
 
   /*!
    * \brief Execute file operations by calling virtual methods.
@@ -84,40 +85,40 @@ protected:
    * \param entryId Unique id of the file or directory.
    * \param source Path to copy the file or directory from.
    */
-  virtual void copyOut(int entryId, fs::path source);
+  virtual void copyOut(int entryId, const fs::path &source);
 
   /*!
    * \brief Called to move a file or directory out to temporary space.
    * \param entryId Unique id of the file or directory.
    * \param source Path to move the file or directory from.
    */
-  virtual void moveOut(int entryId, fs::path source);
+  virtual void moveOut(int entryId, const fs::path &source);
 
   /*!
    * \brief Called to permanently remove a file or directory.
    * \param source Path of the file or directory to be removed.
    */
-  virtual void remove(fs::path source);
+  virtual void remove(const fs::path &source);
 
   /*!
    * \brief Called to copy a file or directory in from temporary space.
    * \param entryId Unique id of the file or directory.
    * \param target Path to copy the file or directory to.
    */
-  virtual void copyIn(int entryId, fs::path target);
+  virtual void copyIn(int entryId, const fs::path &target);
 
   /*!
    * \brief Called to move a file or directory in from temporary space.
    * \param entryId Unique id of the file or directory.
    * \param target Path to move the file or directory to.
    */
-  virtual void moveIn(int entryId, fs::path target);
+  virtual void moveIn(int entryId, const fs::path &target);
 
   /*!
    * \brief Called to create a new directory.
    * \param target Path of the directory to be created.
    */
-  virtual void createDir(fs::path target);
+  virtual void createDir(const fs::path &target);
 
 private:
   struct Operation;                     // Data for one file operation.

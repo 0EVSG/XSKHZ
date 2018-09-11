@@ -22,16 +22,16 @@ void writeNode(const FileTree &tree, const FileTree::Node *node,
     int width = hexWidth(tree.maxEntryId());
     // Iterate through directory content.
     for (auto it = range.begin; it != range.end; ++it) {
-      const FileTree::Node *node = *it;
-      fs::path name = tree.nodeName(node);
+      const FileTree::Node *sub = *it;
+      fs::path name = FileTree::nodeName(sub);
       fs::path path = dir.empty() ? name : dir / name;
       // Write entry id.
       out << std::right << std::setfill('0') << std::setw(width) << std::hex
-          << tree.nodeId(node);
+          << FileTree::nodeId(sub);
       // Write entry path, separated by a tab character.
       out << '\t' << WriteText::pathToString(path) << std::endl;
       // Recursively write subdirectories.
-      writeNode(tree, node, path, out);
+      writeNode(tree, sub, path, out);
     }
   }
 }

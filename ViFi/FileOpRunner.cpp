@@ -3,7 +3,7 @@
 
 namespace {
 // Recursively copy a file or directory from source to target path.
-void copyRecursive(fs::path source, fs::path target) {
+void copyRecursive(const fs::path &source, const fs::path &target) {
   if (fs::is_directory(source)) {
     fs::copy_directory(source, target);
     for (const fs::directory_entry &entry :
@@ -17,7 +17,7 @@ void copyRecursive(fs::path source, fs::path target) {
 }
 } // namespace
 
-FileOpRunner::FileOpRunner(fs::path tempDir) {
+FileOpRunner::FileOpRunner(const fs::path &tempDir) {
   if (!tempDir.empty() && fs::exists(tempDir.parent_path())) {
     fs::create_directory(tempDir);
     _tempDir = tempDir;
@@ -26,8 +26,6 @@ FileOpRunner::FileOpRunner(fs::path tempDir) {
                              _tempDir.string());
   }
 }
-
-FileOpRunner::~FileOpRunner() {}
 
 void FileOpRunner::finish() {
   if (!_tempDir.empty() && fs::exists(_tempDir) && fs::is_empty(_tempDir)) {
@@ -40,22 +38,24 @@ fs::path FileOpRunner::temporary(int entryId) const {
   return _tempDir / FileOpSequence::temporary(entryId);
 }
 
-void FileOpRunner::copyOut(int entryId, fs::path source) {
+void FileOpRunner::copyOut(int entryId, const fs::path &source) {
   copyRecursive(source, temporary(entryId));
 }
 
-void FileOpRunner::moveOut(int entryId, fs::path source) {
+void FileOpRunner::moveOut(int entryId, const fs::path &source) {
   fs::rename(source, temporary(entryId));
 }
 
-void FileOpRunner::remove(fs::path source) { fs::remove_all(source); }
+void FileOpRunner::remove(const fs::path &source) { fs::remove_all(source); }
 
-void FileOpRunner::copyIn(int entryId, fs::path target) {
+void FileOpRunner::copyIn(int entryId, const fs::path &target) {
   copyRecursive(temporary(entryId), target);
 }
 
-void FileOpRunner::moveIn(int entryId, fs::path target) {
+void FileOpRunner::moveIn(int entryId, const fs::path &target) {
   fs::rename(temporary(entryId), target);
 }
 
-void FileOpRunner::createDir(fs::path target) { fs::create_directory(target); }
+void FileOpRunner::createDir(const fs::path &target) {
+  fs::create_directory(target);
+}

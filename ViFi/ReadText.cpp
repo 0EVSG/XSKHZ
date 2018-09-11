@@ -63,9 +63,9 @@ void ReadText::read(std::istream &in, FileTree &tree) {
   fs::path previous;
   std::vector<const FileTree::Node *> parents = {tree.baseNode()};
   // Iterate entries sorted by path.
-  for (auto it = entries.cbegin(); it != entries.cend(); ++it) {
-    fs::path path = it->first;
-    int id = it->second;
+  for (const auto & entry : entries) {
+    fs::path path = entry.first;
+    int id = entry.second;
     // Find directory level where last and current paths differ.
     int level = 0;
     auto part = path.begin();
