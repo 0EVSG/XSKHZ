@@ -211,7 +211,8 @@ void FileTree::generate(FileOpSequence &sequence) const {
         sequence.addOutOp(move.from, node->path(), keep, node->level, p,
                           copies.at(move.from));
       } else if (move.from != NONE_ID && move.from != move.to) {
-        sequence.addOutOp(move.from, node->path(), false, node->level, p, 0);
+        Id id = isValidId(move.from) ? move.from : 0;
+        sequence.addOutOp(id, node->path(), false, node->level, p, 0);
       }
     }
   }

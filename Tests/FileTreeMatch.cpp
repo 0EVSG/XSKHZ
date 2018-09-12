@@ -206,3 +206,38 @@ TEST_F(FileTreeMatch, IconsExample) {
   order.addInOp(5, "/Icons/icons/actions/send-mail.svg", false, 3, 1);
   checkOperations(current.str(), changed.str(), order);
 }
+
+TEST_F(FileTreeMatch, IconsWrongExample) {
+  std::ostringstream current;
+  current << "# ViFi@/Icons" << std::endl;
+  current << "01" << '\t' << "FileIcons" << std::endl;
+  current << "02" << '\t' << "FileIcons/close-file-08.svg" << std::endl;
+  current << "03" << '\t' << "FileIcons/open-file-03.svg" << std::endl;
+  current << "04" << '\t' << "Symbols" << std::endl;
+  current << "05" << '\t' << "Symbols/letter.svg" << std::endl;
+  current << "06" << '\t' << "Symbols/warning.svg" << std::endl;
+  std::ostringstream changed;
+  changed << "# ViFi@/Icons" << std::endl;
+  changed << "01" << '\t' << "icons/actions" << std::endl;
+  changed << "01" << '\t' << "icons/menus" << std::endl;
+  changed << "02" << '\t' << "FileIcons/close-file.svg" << std::endl;
+  changed << "03" << '\t' << "FileIcons/open-file.svg" << std::endl;
+  changed << "04" << '\t' << "icons" << std::endl;
+  changed << "05" << '\t' << "Symbols/actions/send-mail.svg" << std::endl;
+  changed << "06" << '\t' << "Symbols/warning.svg" << std::endl;
+  FileOpSequence order;
+  order.addOutOp(2, "/Icons/FileIcons/close-file-08.svg", false, 2, 2, 1);
+  order.addOutOp(3, "/Icons/FileIcons/open-file-03.svg", false, 2, 2, 1);
+  order.addOutOp(5, "/Icons/Symbols/letter.svg", false, 2, 2, 1);
+  order.addInOp(0, "/Icons/Symbols/actions", true, 2, 2);
+  order.addInOp(2, "/Icons/FileIcons/close-file.svg", false, 2, 2);
+  order.addInOp(3, "/Icons/FileIcons/open-file.svg", false, 2, 2);
+  order.addInOp(5, "/Icons/Symbols/actions/send-mail.svg", false, 3, 2);
+  order.addOutOp(1, "/Icons/FileIcons", false, 1, 1, 2);
+  order.addOutOp(4, "/Icons/Symbols", false, 1, 1, 1);
+  order.addInOp(4, "/Icons/icons", false, 1, 1);
+  order.addOutOp(0, "/Icons/icons/actions", false, 2, 1, 0);
+  order.addInOp(1, "/Icons/icons/actions", false, 2, 1);
+  order.addInOp(1, "/Icons/icons/menus", false, 2, 1);
+  checkOperations(current.str(), changed.str(), order);
+}

@@ -33,7 +33,7 @@ protected:
    * \param entryId Id of the file or directory entry.
    * \return Path to store the file or directory temporarily.
    */
-  virtual fs::path temporary(int entryId) const override;
+  virtual fs::path temporary(Id entryId) const override;
 
   /*!
    * \brief Called to copy a file or directory out to temporary space.
@@ -41,7 +41,7 @@ protected:
    * \param source Path to copy the file or directory from.
    * \exception fs::filesystem_error On file operation failure.
    */
-  virtual void copyOut(int entryId, const fs::path &source) override;
+  virtual void copyOut(Id entryId, const fs::path &source) override;
 
   /*!
    * \brief Called to move a file or directory out to temporary space.
@@ -49,7 +49,7 @@ protected:
    * \param source Path to move the file or directory from.
    * \exception fs::filesystem_error On file operation failure.
    */
-  virtual void moveOut(int entryId, const fs::path &source) override;
+  virtual void moveOut(Id entryId, const fs::path &source) override;
 
   /*!
    * \brief Called to permanently remove a file or directory.
@@ -64,7 +64,7 @@ protected:
    * \param target Path to copy the file or directory to.
    * \exception fs::filesystem_error On file operation failure.
    */
-  virtual void copyIn(int entryId, const fs::path &target) override;
+  virtual void copyIn(Id entryId, const fs::path &target) override;
 
   /*!
    * \brief Called to move a file or directory in from temporary space.
@@ -72,7 +72,7 @@ protected:
    * \param target Path to move the file or directory to.
    * \exception fs::filesystem_error On file operation failure.
    */
-  virtual void moveIn(int entryId, const fs::path &target) override;
+  virtual void moveIn(Id entryId, const fs::path &target) override;
 
   /*!
    * \brief Called to create a new directory.

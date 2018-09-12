@@ -8,7 +8,7 @@
 namespace {
 
 // Compute the number of hex digits needed to express an entry id.
-constexpr int hexWidth(int maxId) {
+constexpr int hexWidth(FileOpSequence::Id maxId) {
   if (maxId > 0) {
     return hexWidth(maxId >> 8) + 2;
   }
@@ -22,7 +22,7 @@ constexpr int hexWidth(int maxId) {
  */
 struct FileOpSequence::Operation {
   Type type;     //!< File operation type.
-  int entryId;   //!< Entry id of the file or directory.
+  Id entryId;    //!< Entry id of the file or directory.
   fs::path path; //!< Source or target path, depending on type.
   Level level;   //!< Source or target directory level.
   Level pivot;   //!< Pivot level for sorting.
@@ -47,11 +47,11 @@ FileOpSequence::~FileOpSequence() {
 
 bool FileOpSequence::empty() const { return _operations.empty(); }
 
-void FileOpSequence::setMaxEntryId(int id) {
+void FileOpSequence::setMaxEntryId(Id id) {
   _maxEntry = std::max(_maxEntry, id);
 }
 
-void FileOpSequence::addOutOp(int entryId, const fs::path &path, bool keep,
+void FileOpSequence::addOutOp(Id entryId, const fs::path &path, bool keep,
                               Level level, Level pivot, int copies) {
   Type type = keep ? CopyOut : MoveOut;
   Operation *op = new Operation({type, entryId, path, level, pivot, copies});
@@ -59,7 +59,7 @@ void FileOpSequence::addOutOp(int entryId, const fs::path &path, bool keep,
   setMaxEntryId(entryId);
 }
 
-void FileOpSequence::addInOp(int entryId, const fs::path &path, bool create,
+void FileOpSequence::addInOp(Id entryId, const fs::path &path, bool create,
                              Level level, Level pivot) {
   int copies = create ? 0 : 1;
   Operation *op = new Operation({CopyIn, entryId, path, level, pivot, copies});
@@ -169,28 +169,28 @@ void FileOpSequence::run() {
   }
 }
 
-fs::path FileOpSequence::temporary(int entryId) const {
+fs::path FileOpSequence::temporary(Id entryId) const {
   std::ostringstream hex;
   hex << std::right << std::setfill('0') << std::setw(hexWidth(_maxEntry))
       << std::hex << entryId;
   return hex.str();
 }
 
-void FileOpSequence::copyOut(int /*unused*/, const fs::path & /*unused*/) {}
+void FileOpSequence::copyOut(Id /*unused*/, const fs::path & /*unused*/) {}
 
-void FileOpSequence::moveOut(int /*unused*/, const fs::path & /*unused*/) {}
+void FileOpSequence::moveOut(Id /*unused*/, const fs::path & /*unused*/) {}
 
 void FileOpSequence::remove(const fs::path & /*unused*/) {}
 
-void FileOpSequence::copyIn(int /*unused*/, const fs::path & /*unused*/) {}
+void FileOpSequence::copyIn(Id /*unused*/, const fs::path & /*unused*/) {}
 
-void FileOpSequence::moveIn(int /*unused*/, const fs::path & /*unused*/) {}
+void FileOpSequence::moveIn(Id /*unused*/, const fs::path & /*unused*/) {}
 
 void FileOpSequence::createDir(const fs::path & /*unused*/) {}
 
 bool FileOpSequence::operator==(const FileOpSequence &other) const {
   bool same = _operations.size() == other._operations.size();
-  for (unsigned int i = 0; i < _operations.size() && same; ++i) {
+  for (std::size_t i = 0; i < _operations.size() && same; ++i) {
     same = *(_operations.at(i)) == *(other._operations.at(i));
   }
   return same;

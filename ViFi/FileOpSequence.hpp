@@ -12,6 +12,7 @@ namespace fs = boost::filesystem;
  */
 class FileOpSequence {
 public:
+  typedef std::size_t Id;    //!< Type used entry identifiers.
   typedef std::size_t Level; //!< Type used for directory levels.
 
   //! File operation type.
@@ -26,7 +27,7 @@ public:
 
   bool empty() const; //!< Indicate an empty operation sequence.
 
-  void setMaxEntryId(int id); //!< Set the maximum entry id.
+  void setMaxEntryId(Id id); //!< Set the maximum entry id.
 
   /*!
    * \brief Add a file operation out to temporary space.
@@ -37,7 +38,7 @@ public:
    * \param pivot Pivot value for sorting, if different from level.
    * \param copies Total number of copies to be made.
    */
-  void addOutOp(int entryId, const fs::path &path, bool keep, Level level,
+  void addOutOp(Id entryId, const fs::path &path, bool keep, Level level,
                 Level pivot, int copies);
 
   /*!
@@ -48,7 +49,7 @@ public:
    * \param level Relative directory level of the target.
    * \param pivot Level of first path difference from original.
    */
-  void addInOp(int entryId, const fs::path &path, bool create, Level level,
+  void addInOp(Id entryId, const fs::path &path, bool create, Level level,
                Level pivot);
 
   /*!
@@ -80,21 +81,21 @@ protected:
    * \param entryId Id of the file or directory entry.
    * \return Path to store the file or directory temporarily.
    */
-  virtual fs::path temporary(int entryId) const;
+  virtual fs::path temporary(Id entryId) const;
 
   /*!
    * \brief Called to copy a file or directory out to temporary space.
    * \param entryId Unique id of the file or directory.
    * \param source Path to copy the file or directory from.
    */
-  virtual void copyOut(int entryId, const fs::path &source);
+  virtual void copyOut(Id entryId, const fs::path &source);
 
   /*!
    * \brief Called to move a file or directory out to temporary space.
    * \param entryId Unique id of the file or directory.
    * \param source Path to move the file or directory from.
    */
-  virtual void moveOut(int entryId, const fs::path &source);
+  virtual void moveOut(Id entryId, const fs::path &source);
 
   /*!
    * \brief Called to permanently remove a file or directory.
@@ -107,14 +108,14 @@ protected:
    * \param entryId Unique id of the file or directory.
    * \param target Path to copy the file or directory to.
    */
-  virtual void copyIn(int entryId, const fs::path &target);
+  virtual void copyIn(Id entryId, const fs::path &target);
 
   /*!
    * \brief Called to move a file or directory in from temporary space.
    * \param entryId Unique id of the file or directory.
    * \param target Path to move the file or directory to.
    */
-  virtual void moveIn(int entryId, const fs::path &target);
+  virtual void moveIn(Id entryId, const fs::path &target);
 
   /*!
    * \brief Called to create a new directory.
@@ -125,7 +126,7 @@ protected:
 private:
   struct Operation;                     // Data for one file operation.
   std::vector<Operation *> _operations; // List of all file operations.
-  int _maxEntry;                        // Maximum entry id encountered.
+  Id _maxEntry;                         // Maximum entry id encountered.
 };
 
 #endif // FILEOPSEQUENCE_HPP

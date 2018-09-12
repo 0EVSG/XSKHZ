@@ -34,25 +34,25 @@ void FileOpRunner::finish() {
   }
 }
 
-fs::path FileOpRunner::temporary(int entryId) const {
+fs::path FileOpRunner::temporary(Id entryId) const {
   return _tempDir / FileOpSequence::temporary(entryId);
 }
 
-void FileOpRunner::copyOut(int entryId, const fs::path &source) {
+void FileOpRunner::copyOut(Id entryId, const fs::path &source) {
   copyRecursive(source, temporary(entryId));
 }
 
-void FileOpRunner::moveOut(int entryId, const fs::path &source) {
+void FileOpRunner::moveOut(Id entryId, const fs::path &source) {
   fs::rename(source, temporary(entryId));
 }
 
 void FileOpRunner::remove(const fs::path &source) { fs::remove_all(source); }
 
-void FileOpRunner::copyIn(int entryId, const fs::path &target) {
+void FileOpRunner::copyIn(Id entryId, const fs::path &target) {
   copyRecursive(temporary(entryId), target);
 }
 
-void FileOpRunner::moveIn(int entryId, const fs::path &target) {
+void FileOpRunner::moveIn(Id entryId, const fs::path &target) {
   fs::rename(temporary(entryId), target);
 }
 
