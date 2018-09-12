@@ -24,8 +24,8 @@ struct FileOpSequence::Operation {
   Type type;     //!< File operation type.
   int entryId;   //!< Entry id of the file or directory.
   fs::path path; //!< Source or target path, depending on type.
-  int level;     //!< Source or target directory level.
-  int pivot;     //!< Pivot level for sorting.
+  Level level;   //!< Source or target directory level.
+  Level pivot;   //!< Pivot level for sorting.
   int copies;    //!< Number of copies to be made.
 
   //! Indicate equality of all struct members.
@@ -52,7 +52,7 @@ void FileOpSequence::setMaxEntryId(int id) {
 }
 
 void FileOpSequence::addOutOp(int entryId, const fs::path &path, bool keep,
-                              int level, int pivot, int copies) {
+                              Level level, Level pivot, int copies) {
   Type type = keep ? CopyOut : MoveOut;
   Operation *op = new Operation({type, entryId, path, level, pivot, copies});
   _operations.push_back(op);
@@ -60,7 +60,7 @@ void FileOpSequence::addOutOp(int entryId, const fs::path &path, bool keep,
 }
 
 void FileOpSequence::addInOp(int entryId, const fs::path &path, bool create,
-                             int level, int pivot) {
+                             Level level, Level pivot) {
   int copies = create ? 0 : 1;
   Operation *op = new Operation({CopyIn, entryId, path, level, pivot, copies});
   _operations.push_back(op);

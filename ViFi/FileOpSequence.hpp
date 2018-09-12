@@ -12,6 +12,8 @@ namespace fs = boost::filesystem;
  */
 class FileOpSequence {
 public:
+  typedef std::size_t Level; //!< Type used for directory levels.
+
   //! File operation type.
   enum Type {
     CopyOut, //!< Copy file or directory out to temporary space.
@@ -35,8 +37,8 @@ public:
    * \param pivot Pivot value for sorting, if different from level.
    * \param copies Total number of copies to be made.
    */
-  void addOutOp(int entryId, const fs::path &path, bool keep, int level,
-                int pivot, int copies);
+  void addOutOp(int entryId, const fs::path &path, bool keep, Level level,
+                Level pivot, int copies);
 
   /*!
    * \brief Add a file operation in from the temporary space.
@@ -46,8 +48,8 @@ public:
    * \param level Relative directory level of the target.
    * \param pivot Level of first path difference from original.
    */
-  void addInOp(int entryId, const fs::path &path, bool create, int level,
-               int pivot);
+  void addInOp(int entryId, const fs::path &path, bool create, Level level,
+               Level pivot);
 
   /*!
    * \brief Check and sort operations into a feasible order.

@@ -4,7 +4,8 @@
 #include <exception>
 
 namespace {
-constexpr int MAX_PIVOT = std::numeric_limits<int>::max();
+constexpr FileTree::Level MAX_LEVEL =
+    std::numeric_limits<FileTree::Level>::max();
 constexpr int CREATE_DIR = -3;
 constexpr bool isValidId(int id) { return id >= 0; }
 } // namespace
@@ -17,8 +18,8 @@ struct FileTree::Node {
   Id entry;        //!< Id of the directory entry, a file or also a directory.
   Id target;       //!< Target Id of the directory entry.
   fs::path name;   //!< Entry name in the directory.
-  int level;       //!< Directory depth level in the file tree.
-  int pivot;       //!< Level of first path difference for target.
+  Level level;     //!< Directory depth level in the file tree.
+  Level pivot;     //!< Level of first path difference for target.
 
   /*!
    * \brief Data to store the entry change of a file tree node.
@@ -32,17 +33,17 @@ struct FileTree::Node {
 
   /*!
    * \brief Get the move data for given pivot.
-   * \param pivot Pivot level, corresponding to execution level.
+   * \param pvt Pivot level, corresponding to execution level.
    * \return Move reference for given pivot.
    */
-  Move &move(int pivot) { return moves[moves.size() - pivot]; }
+  Move &move(Level pvt) { return moves[moves.size() - pvt]; }
 
   /*!
    * \brief Get the constant move data for given pivot.
-   * \param pivot Pivot level, corresponding to execution level.
+   * \param pvt Pivot level, corresponding to execution level.
    * \return Constant move reference for given pivot.
    */
-  const Move &move(int pivot) const { return moves.at(moves.size() - pivot); }
+  const Move &move(Level pvt) const { return moves.at(moves.size() - pvt); }
 
   /*!
    * \brief Reassemble the filesystem path of the file tree node.
@@ -69,8 +70,9 @@ struct FileTree::Node {
 
 namespace {
 // Compute the directory level where the path of two entry nodes diverge.
-int pivot(const FileTree::Node *nodeA, const FileTree::Node *nodeB) {
-  int result = 0;
+FileTree::Level pivot(const FileTree::Node *nodeA,
+                      const FileTree::Node *nodeB) {
+  FileTree::Level result = 0;
   if (nodeA && nodeB) {
     const FileTree::Node *nextA = nodeA->dir;
     const FileTree::Node *nextB = nodeB->dir;
@@ -81,8 +83,7 @@ int pivot(const FileTree::Node *nodeA, const FileTree::Node *nodeB) {
       nextA = nodeA;
       result = nodeA->level;
     } else {
-      result = (nodeA->name != nodeB->name) ? nodeA->level
-                                            : std::numeric_limits<int>::max();
+      result = (nodeA->name != nodeB->name) ? nodeA->level : MAX_LEVEL;
     }
     if (nextA != nodeA || nextB != nodeB) {
       result = std::min(result, pivot(nextA, nextB));
@@ -113,7 +114,7 @@ fs::path FileTree::name(const FileTree::Node *entry) {
 
 FileTree::FileTree()
     : _root(
-          new Node({nullptr, ROOT_ID, ROOT_ID, fs::path(), 0, MAX_PIVOT, {}})),
+          new Node({nullptr, ROOT_ID, ROOT_ID, fs::path(), 0, MAX_LEVEL, {}})),
       _original(true), _index(new std::vector<Node *>()) {
   _root->dir = _root;
   clear();
@@ -190,7 +191,7 @@ void FileTree::generate(FileOpSequence &sequence) const {
   // Count additional target copies and add corresponding file operations.
   std::vector<int> copies(_byId.size(), 0);
   for (const Node *node : _nodes) {
-    for (int p = node->level; p >= 1; --p) {
+    for (Level p = node->level; p >= 1; --p) {
       const Node::Move &move = node->move(p);
       if (isValidId(move.to) && move.to != move.from) {
         sequence.addInOp(move.to, node->path(), false, node->level, p);
@@ -202,7 +203,7 @@ void FileTree::generate(FileOpSequence &sequence) const {
   }
   // Add file operations out to temporary space.
   for (const Node *node : _nodes) {
-    for (int p = node->level; p >= 1; --p) {
+    for (Level p = node->level; p >= 1; --p) {
       const Node::Move &move = node->move(p);
       if (p == node->level && isValidId(move.from) &&
           (move.from != move.to || copies.at(move.from) > 0)) {
@@ -217,7 +218,7 @@ void FileTree::generate(FileOpSequence &sequence) const {
 }
 
 void FileTree::clear() noexcept {
-  *_root = {_root, ROOT_ID, ROOT_ID, fs::path(), 0, MAX_PIVOT, {}};
+  *_root = {_root, ROOT_ID, ROOT_ID, fs::path(), 0, MAX_LEVEL, {}};
 
   _byId.resize(1, _root);
   for (const Node *node : _nodes) {
@@ -254,7 +255,7 @@ FileTree::Node *FileTree::addEntry(const Node *dir, Id entryId,
                                    "] already in use.");
         }
         node = new Node(
-            {dir, entryId, NONE_ID, name, dir->level + 1, MAX_PIVOT, {}});
+            {dir, entryId, NONE_ID, name, dir->level + 1, MAX_LEVEL, {}});
         _byId[entryId] = node;
         _nodes.push_back(node);
       } else {
@@ -272,7 +273,7 @@ FileTree::Node *FileTree::addEntry(const Node *dir, Id entryId,
       } else {
         // No existing entry, create a new entry node and append it.
         node = new Node(
-            {dir, NONE_ID, entryId, name, dir->level + 1, MAX_PIVOT, {}});
+            {dir, NONE_ID, entryId, name, dir->level + 1, MAX_LEVEL, {}});
         _nodes.push_back(node);
       }
     }
@@ -314,7 +315,7 @@ void FileTree::computeMoves() {
   for (Node *node : _nodes) {
     // Iterate relevant pivots from level to 1.
     Id previous = node->entry;
-    for (int p = node->level; p >= 1; --p) {
+    for (Level p = node->level; p >= 1; --p) {
       // Consider prior parent directory changes in this pivot.
       if (p <= node->dir->level &&
           node->dir->move(p).from != node->dir->move(p).to) {

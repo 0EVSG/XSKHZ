@@ -43,6 +43,8 @@ public:
   static constexpr Id ROOT_ID = 0;  //!< Id of the root directory entry.
   static constexpr Id NONE_ID = -1; //!< Id of a non-existing entry.
 
+  typedef std::size_t Level; //!< Type used for directory levels.
+
   struct Node; //!< Stores a directory entry as a node in the file tree.
 
   /*!
