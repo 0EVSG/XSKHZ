@@ -5,7 +5,6 @@ INPUT                  = @PROJECT_SOURCE_DIR@
 FILE_PATTERNS          = *.hpp \
                          *.cpp \
                          *.md \
-                         *.txt \
                          *.dox
 OUTPUT_DIRECTORY       = @DOXYGEN_OUTPUT_DIR@
 RECURSIVE              = YES

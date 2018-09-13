@@ -1,5 +1,6 @@
 #include "ViFi/FileOpRunner.hpp"
-#include <exception>
+#include <stdexcept>
+#include <string>
 
 namespace {
 // Recursively copy a file or directory from source to target path.

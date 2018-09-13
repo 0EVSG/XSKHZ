@@ -3,7 +3,7 @@
 #include "ViFi/FileTree.hpp"
 #include "ViFi/ReadText.hpp"
 #include "gtest/gtest.h"
-#include <strstream>
+#include <sstream>
 
 /*!
  * \brief Test matching of file trees.

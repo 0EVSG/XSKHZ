@@ -3,6 +3,8 @@
 #include <exception>
 #include <fstream>
 #include <iomanip>
+#include <stdexcept>
+#include <string>
 
 namespace {
 

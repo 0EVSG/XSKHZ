@@ -18,6 +18,7 @@ _ViFi file management tool_
 ## Upcoming
 
 - [x] Enable more compiler warnings and fix them.
+- [x] Build options for static code analysis.
 
 ## Version 0.1.0
 

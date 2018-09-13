@@ -2,6 +2,8 @@
 #include "ViFi/ReadText.hpp"
 #include "ViFi/WriteText.hpp"
 #include "gtest/gtest.h"
+#include <exception>
+#include <sstream>
 
 /*!
  * \brief Test write and read of file trees.

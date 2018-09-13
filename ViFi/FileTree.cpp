@@ -1,7 +1,10 @@
 #include "ViFi/FileTree.hpp"
 #include "ViFi/FileOpSequence.hpp"
 #include <algorithm>
-#include <exception>
+#include <limits>
+#include <stdexcept>
+#include <string>
+#include <utility>
 
 namespace {
 // Maximum directory level, used as pivot for unchanged paths.
@@ -191,11 +194,11 @@ FileTree::Id FileTree::nodeId(const FileTree::Node *node) {
   return NONE_ID;
 }
 
-std::string FileTree::nodeName(const FileTree::Node *node) {
+fs::path FileTree::nodeName(const FileTree::Node *node) {
   if (node) {
-    return node->name.string();
+    return node->name;
   }
-  return std::string();
+  return fs::path();
 }
 
 FileTree::Id FileTree::maxEntryId() const { return _byId.size() - 1; }

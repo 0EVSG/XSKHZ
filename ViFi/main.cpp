@@ -3,6 +3,7 @@
 #include "ViFi/ReadText.hpp"
 #include "ViFi/ScanDirectory.hpp"
 #include "ViFi/WriteText.hpp"
+#include <cstdio>
 #include <exception>
 #include <iostream>
 #include <string>

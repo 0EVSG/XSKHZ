@@ -1,9 +1,10 @@
 #include "ViFi/FileOpSequence.hpp"
 #include <algorithm>
-#include <exception>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
+#include <stdexcept>
+#include <string>
 
 namespace {
 

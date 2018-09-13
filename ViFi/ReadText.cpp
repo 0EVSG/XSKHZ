@@ -1,7 +1,11 @@
 #include "ViFi/ReadText.hpp"
 #include "ViFi/FileTree.hpp"
 #include <exception>
+#include <istream>
 #include <map>
+#include <stdexcept>
+#include <string>
+#include <vector>
 
 fs::path ReadText::stringToPath(const std::string &str) { return str; }
 

@@ -2,6 +2,7 @@
 #define READTEXT_HPP
 
 #include <boost/filesystem.hpp>
+#include <iosfwd>
 
 class FileTree;
 

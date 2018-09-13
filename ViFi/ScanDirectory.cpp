@@ -1,6 +1,8 @@
 #include "ViFi/ScanDirectory.hpp"
 #include "ViFi/FileTree.hpp"
 #include <exception>
+#include <stdexcept>
+#include <string>
 
 namespace {
 

@@ -6,11 +6,6 @@
 
 namespace fs = boost::filesystem;
 
-namespace FVM {
-class IteratorFVM;
-class Assembler;
-} // namespace FVM
-
 class FileOpSequence;
 
 /*!
@@ -101,7 +96,7 @@ public:
    * \param node File tree node.
    * \return Entry name of the node, empty if node is invalid.
    */
-  static std::string nodeName(const Node *node);
+  static fs::path nodeName(const Node *node);
 
   /*!
    * \brief Get the maximum entry id.
