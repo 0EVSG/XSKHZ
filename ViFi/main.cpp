@@ -32,8 +32,9 @@ int main(int argc, char *argv[]) {
   enum Status { Ok = 0, Cancel = 1, InputError = 1, Failure = -1 };
 
   // Read arguments.
-  std::vector<std::string> arguments(argc);
-  for (int i = 0; i < argc; ++i) {
+  auto argSize = static_cast<std::size_t>(argc);
+  std::vector<std::string> arguments(argSize);
+  for (std::size_t i = 0; i < argSize; ++i) {
     arguments[i] = argv[i];
   }
 

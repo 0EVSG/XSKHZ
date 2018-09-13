@@ -23,6 +23,21 @@ constexpr FileTree::Id CREATE_DIR = MAX_ID + 2;
  * \brief Internal data to store a file tree node.
  */
 struct FileTree::Node {
+  /*!
+   * \brief Complete Node constructor with "unchanged" default pivot.
+   */
+  Node(const Node *_dir, Id _entry, Id _target, fs::path _name, Level _level,
+       Level _pivot = MAX_LEVEL)
+      : dir(_dir), entry(_entry), target(_target), name(std::move(_name)),
+        level(_level), pivot(_pivot) {}
+
+  /*!
+   * \brief Construct temporary Node for search comparison.
+   */
+  Node(const Node *_dir, fs::path _name = fs::path())
+      : dir(_dir), entry(NONE_ID), target(NONE_ID), name(std::move(_name)),
+        level(0), pivot(MAX_LEVEL) {}
+
   const Node *dir; //!< Pointer to parent directory node.
   Id entry;        //!< Id of the directory entry, a file or also a directory.
   Id target;       //!< Target Id of the directory entry.
@@ -122,8 +137,7 @@ fs::path FileTree::name(const FileTree::Node *entry) {
 }
 
 FileTree::FileTree()
-    : _root(
-          new Node({nullptr, ROOT_ID, ROOT_ID, fs::path(), 0, MAX_LEVEL, {}})),
+    : _root(new Node(nullptr, ROOT_ID, ROOT_ID, fs::path(), 0)),
       _original(true), _index(new std::vector<Node *>()) {
   _root->dir = _root;
   clear();
@@ -189,7 +203,7 @@ FileTree::Id FileTree::maxEntryId() const { return _byId.size() - 1; }
 FileTree::Range FileTree::entries(const FileTree::Node *dir) const {
   // Binary search the range of all entries in given directory.
   const std::vector<Node *> *idx = index();
-  const Node value = {dir};
+  const Node value(dir);
   auto range = std::equal_range(idx->begin(), idx->end(), &value, lessDir);
   return {range.first, range.second};
 }
@@ -228,7 +242,7 @@ void FileTree::generate(FileOpSequence &sequence) const {
 }
 
 void FileTree::clear() noexcept {
-  *_root = {_root, ROOT_ID, ROOT_ID, fs::path(), 0, MAX_LEVEL, {}};
+  *_root = Node(_root, ROOT_ID, ROOT_ID, fs::path(), 0);
 
   _byId.resize(1, _root);
   for (const Node *node : _nodes) {
@@ -268,8 +282,7 @@ FileTree::Node *FileTree::addEntry(const Node *dir, Id entryId,
           throw std::runtime_error("Entry id of [" + name.string() +
                                    "] already in use.");
         }
-        node = new Node(
-            {dir, entryId, NONE_ID, name, dir->level + 1, MAX_LEVEL, {}});
+        node = new Node(dir, entryId, NONE_ID, name, dir->level + 1);
         _byId[entryId] = node;
         _nodes.push_back(node);
       } else {
@@ -277,7 +290,7 @@ FileTree::Node *FileTree::addEntry(const Node *dir, Id entryId,
       }
     } else {
       // Search for a directory entry of the same name.
-      const Node value = {dir, NONE_ID, NONE_ID, name, 0, 0, {}};
+      const Node value(dir, name);
       auto range =
           std::equal_range(_index->begin(), _index->end(), &value, lessDirName);
       if (range.first != range.second) {
@@ -286,8 +299,7 @@ FileTree::Node *FileTree::addEntry(const Node *dir, Id entryId,
         node->target = entryId;
       } else {
         // No existing entry, create a new entry node and append it.
-        node = new Node(
-            {dir, NONE_ID, entryId, name, dir->level + 1, MAX_LEVEL, {}});
+        node = new Node(dir, NONE_ID, entryId, name, dir->level + 1);
         _nodes.push_back(node);
       }
     }
@@ -337,13 +349,7 @@ void FileTree::computeMoves() {
         previous = NONE_ID;
         if (isValidId(node->dir->move(p).to)) {
           // Search for a former entry in the original directory with this name.
-          const Node value = {_byId.at(node->dir->move(p).to),
-                              NONE_ID,
-                              NONE_ID,
-                              node->name,
-                              0,
-                              0,
-                              {}};
+          const Node value(_byId.at(node->dir->move(p).to), node->name);
           auto range = std::equal_range(index()->begin(), index()->end(),
                                         &value, lessDirName);
           if (range.first != range.second) {

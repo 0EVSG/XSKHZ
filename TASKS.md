@@ -15,6 +15,10 @@ _ViFi file management tool_
 
 # Changelog
 
+## Upcoming
+
+- [x] Enable more compiler warnings and fix them.
+
 ## Version 0.1.0
 
 - [x] Initial dump to github repository.
