@@ -4,10 +4,19 @@
 #include <exception>
 
 namespace {
+// Maximum directory level, used as pivot for unchanged paths.
 constexpr FileTree::Level MAX_LEVEL =
     std::numeric_limits<FileTree::Level>::max();
-constexpr int CREATE_DIR = -3;
-constexpr bool isValidId(int id) { return id >= 0; }
+// Entry id of the root directory.
+constexpr FileTree::Id ROOT_ID = 0;
+// Maximum valid entry id.
+constexpr FileTree::Id MAX_ID = std::numeric_limits<FileTree::Id>::max() - 2;
+// Check for a valid entry id.
+constexpr bool isValidId(FileTree::Id id) { return id <= MAX_ID; }
+// Invalid entry id that stands for a non-existing (removed) entry.
+constexpr FileTree::Id NONE_ID = MAX_ID + 1;
+// Invalid entry id that stands for a newly created directory.
+constexpr FileTree::Id CREATE_DIR = MAX_ID + 2;
 } // namespace
 
 /*!
@@ -127,11 +136,11 @@ FileTree::~FileTree() {
 }
 
 void FileTree::endOriginal() {
-  for (int i = 0; i < _byId.size(); ++i) {
-    const Node *node = _byId.at(i);
+  for (Id id = 0; id < _byId.size(); ++id) {
+    const Node *node = _byId.at(id);
     if (!node) {
       throw std::runtime_error("Missing entry from original tree.");
-    } else if (node->entry != i) {
+    } else if (node->entry != id) {
       throw std::runtime_error("Invalid entry id in original tree.");
     }
   }
@@ -211,7 +220,7 @@ void FileTree::generate(FileOpSequence &sequence) const {
         sequence.addOutOp(move.from, node->path(), keep, node->level, p,
                           copies.at(move.from));
       } else if (move.from != NONE_ID && move.from != move.to) {
-        Id id = isValidId(move.from) ? move.from : 0;
+        Id id = isValidId(move.from) ? move.from : ROOT_ID;
         sequence.addOutOp(id, node->path(), false, node->level, p, 0);
       }
     }
@@ -240,7 +249,11 @@ bool FileTree::operator==(const FileTree &other) const {
 
 const FileTree::Node *FileTree::addEntry(const Node *dir,
                                          const fs::path &name) {
-  return addEntry(dir, _byId.size(), name);
+  if (_original) {
+    return addEntry(dir, _byId.size(), name);
+  } else {
+    return addEntry(dir, NONE_ID, name);
+  }
 }
 
 FileTree::Node *FileTree::addEntry(const Node *dir, Id entryId,
@@ -248,7 +261,7 @@ FileTree::Node *FileTree::addEntry(const Node *dir, Id entryId,
   Node *node = nullptr;
   if (dir) {
     if (_original) {
-      if (entryId >= 0) {
+      if (isValidId(entryId)) {
         if (_byId.size() <= entryId) {
           _byId.resize(entryId + 1, nullptr);
         } else if (_byId.at(entryId)) {

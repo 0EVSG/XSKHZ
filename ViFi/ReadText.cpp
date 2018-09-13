@@ -31,7 +31,7 @@ void ReadText::read(std::istream &in, FileTree &tree) {
   }
 
   // Parse entry lines.
-  std::map<fs::path, int> entries;
+  std::map<fs::path, FileTree::Id> entries;
   std::string line;
   while (std::getline(in, line)) {
     // Check presence of tab separator.
@@ -39,7 +39,7 @@ void ReadText::read(std::istream &in, FileTree &tree) {
     if (separator < std::string::npos) {
       // Parse entry id.
       std::string::size_type parsed = 0;
-      int id = std::stoi(line, &parsed, 16);
+      FileTree::Id id = std::stoul(line, &parsed, 16);
       if (id > 0 && parsed == separator) {
         // Parse entry path.
         ++parsed;
@@ -63,11 +63,11 @@ void ReadText::read(std::istream &in, FileTree &tree) {
   fs::path previous;
   std::vector<const FileTree::Node *> parents = {tree.baseNode()};
   // Iterate entries sorted by path.
-  for (const auto & entry : entries) {
+  for (const auto &entry : entries) {
     fs::path path = entry.first;
-    int id = entry.second;
+    FileTree::Id id = entry.second;
     // Find directory level where last and current paths differ.
-    int level = 0;
+    FileTree::Level level = 0;
     auto part = path.begin();
     for (auto prev = previous.begin();
          prev != previous.end() && part != path.end() && *prev == *part;
@@ -79,8 +79,7 @@ void ReadText::read(std::istream &in, FileTree &tree) {
     // Add intermediate directories without entry ids.
     fs::path name = *part;
     for (++part; part != path.end(); ++part) {
-      parents.push_back(
-          tree.addEntry(parents.at(level), FileTree::NONE_ID, name));
+      parents.push_back(tree.addEntry(parents.at(level), name));
       name = *part;
       ++level;
     }
