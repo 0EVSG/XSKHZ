@@ -52,15 +52,15 @@ set(VIFI_MAIN
   ViFi/main.cpp
 )
 
-add_executable(ViFi ${VIFI_MAIN})
-target_link_libraries(ViFi PRIVATE ViFiLib)
-target_include_directories(ViFi PRIVATE ViFiLib ${CMAKE_CURRENT_BINARY_DIR})
+add_executable(ViFiBin ${VIFI_MAIN})
+target_link_libraries(ViFiBin PRIVATE ViFiLib)
+target_include_directories(ViFiBin PRIVATE ViFiLib ${CMAKE_CURRENT_BINARY_DIR})
 
 configure_file(ViFi/vifi.in ${CMAKE_CURRENT_BINARY_DIR}/vifi)
 
 ## Installation ##
 # Install ViFi executable.
-install(TARGETS ViFi EXPORT ExportTargets
+install(TARGETS ViFiBin EXPORT ExportTargets
   RUNTIME DESTINATION bin
 )
 

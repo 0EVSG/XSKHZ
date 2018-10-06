@@ -31,7 +31,7 @@ VIFI_CURRENT_FILE="$VIFI_TEMP_DIR/current"
 VIFI_CHANGED_FILE="$VIFI_TEMP_DIR/changed"
 
 # Scan base directory to FVM file.
-ViFi scan "$VIFI_BASE_DIR" "$VIFI_CURRENT_FILE"
+ViFiBin scan "$VIFI_BASE_DIR" "$VIFI_CURRENT_FILE"
 if [ "$?" -eq "0" ]; then
   cp "$VIFI_CURRENT_FILE" "$VIFI_CHANGED_FILE"
 else
@@ -50,7 +50,7 @@ do
   fi
 
   # Process changes and execute file operations.
-  ViFi move "$VIFI_CURRENT_FILE" "$VIFI_CHANGED_FILE"
+  ViFiBin move "$VIFI_CURRENT_FILE" "$VIFI_CHANGED_FILE"
   VIFI_STATUS="$?"
 
   # Examine ViFi status.
