@@ -1,10 +1,15 @@
 #ifndef FILETREE_HPP
 #define FILETREE_HPP
 
+#if __has_include(<filesystem>)
+#include <filesystem>
+namespace fs = std::filesystem;
+#else
 #include <experimental/filesystem>
-#include <vector>
-
 namespace fs = std::experimental::filesystem;
+#endif
+
+#include <vector>
 
 class FileOpSequence;
 

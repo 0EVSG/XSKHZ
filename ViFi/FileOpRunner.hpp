@@ -2,9 +2,14 @@
 #define FILEOPRUNNER_HPP
 
 #include "ViFi/FileOpSequence.hpp"
-#include <experimental/filesystem>
 
+#if __has_include(<filesystem>)
+#include <filesystem>
+namespace fs = std::filesystem;
+#else
+#include <experimental/filesystem>
 namespace fs = std::experimental::filesystem;
+#endif
 
 /*!
  * \class FileOpRunner FileOpRunner.hpp "ViFi/FileOpRunner.hpp"

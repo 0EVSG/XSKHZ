@@ -1,12 +1,17 @@
 #ifndef WRITETEXT_HPP
 #define WRITETEXT_HPP
 
+#if __has_include(<filesystem>)
+#include <filesystem>
+namespace fs = std::filesystem;
+#else
 #include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+#endif
+
 #include <ostream>
 
 class FileTree;
-
-namespace fs = std::experimental::filesystem;
 
 /*!
  * \class WriteText WriteText.hpp "ViFi/WriteText.hpp"

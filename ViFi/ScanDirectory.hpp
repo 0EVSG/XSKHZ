@@ -1,11 +1,15 @@
 #ifndef SCANDIRECTORY_HPP
 #define SCANDIRECTORY_HPP
 
+#if __has_include(<filesystem>)
+#include <filesystem>
+namespace fs = std::filesystem;
+#else
 #include <experimental/filesystem>
+namespace fs = std::experimental::filesystem;
+#endif
 
 class FileTree;
-
-namespace fs = std::experimental::filesystem;
 
 /*!
  * \class ScanDirectory ScanDirectory.hpp "ViFi/ScanDirectory.hpp"
