@@ -5,10 +5,9 @@ _ViFi file management tool_
 ## Platforms and Compatibility
 
 ViFi should be compatible with most unixoid systems - it needs a simple bourne
-shell (`/bin/sh`) for its wrapper script and the Boost library for filesystem
-operations in the main program.
-The dependency on the Boost library will eventually be dropped for the almost
-identical implementation in the C++17 standard library (`std::filesystem`).
+shell (`/bin/sh`) for its wrapper script and a modern c++ standard library for
+filesystem operations in the main program.
+
 > Beware that ViFi is still beta software, primarily tested on FreeBSD.
 
 ## Build
@@ -16,8 +15,7 @@ identical implementation in the C++17 standard library (`std::filesystem`).
 Building ViFi requires
 * CMake for the setup of the build recipes.
 * ninja or make for build execution.
-* A C++14 standard compatible compiler.
-* Boost libraries for filesystem operations.
+* C++17 standard library and compiler.
 
 CMake options include
 * `BUILD_TESTS` - builds self tests which require the Google C++ test library,
@@ -60,7 +58,7 @@ Enjoy!
 
 Prerequisites:
 
-    root@work:~ # pkg install ninja cmake boost-libs
+    root@work:~ # pkg install ninja cmake
 
 FreeBSD promotes the `$HOME/bin` directory for user installed software, and
 includes it in `$PATH` by default. That would thus be
@@ -73,7 +71,7 @@ FreeBSD base.
 
 Prerequisites:
 
-    <joe@work~> sudo apt-get install ninja-build cmake libboost-all-dev
+    <joe@work~> sudo apt-get install ninja-build cmake
 
 Ubuntu seems to use either `$HOME/bin` or `$HOME/.local/bin` by default for
 software in the home directory, and will set `$PATH` accordingly on login.
